@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_lamp_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_marginBottom="40dp">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="119dp"
+        android:layout_height="110dp"
+        android:layout_gravity="center"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp" />
+
+    <TextView
+        android:id="@+id/text_view_lamp"
+        android:layout_width="184dp"
+        android:layout_height="41dp"
+        android:layout_gravity="center"
+        android:baselineAligned="false"
+        android:fontFamily="cursive"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        tools:fontFamily="casual" />
+
+    <Switch
+        android:id="@+id/switchView"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_weight="1" />
+
+</LinearLayout>
+
+
+
