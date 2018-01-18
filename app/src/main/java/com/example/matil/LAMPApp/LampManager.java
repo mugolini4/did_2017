@@ -1,5 +1,7 @@
 package com.example.matil.LAMPApp;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -29,6 +31,7 @@ public class LampManager {
     }
 
     public void discover(Runnable done) {
+        Log.d("!!!debug", "sono in discover");
 
         done.run();
     }

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         String toast_text = "welcome >:|";
         Toast toast = Toast.makeText( context, toast_text, toast_duration );
         toast.show();
+        Log.d("!!!debug", "sono in main activity");
+        LampManager.getInstance().discover( new UDPListener() );
 
         ItemClickSupport.addTo(rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -58,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT );
                 toast.show();
 
-                Intent detailIntent = new Intent( MainActivity.this, LampDetailActivity.class );
+                /*Intent detailIntent = new Intent( MainActivity.this, LampDetailActivity.class );
                 detailIntent.putExtra( "lamp_name", lampList.get( position ).getLamp_name() );
                 detailIntent.putExtra( "lamp_photo_ID", lampList.get( position ).getLamp_image() );
-                startActivity( detailIntent );
+                startActivity( detailIntent );*/
             }
         });
 
