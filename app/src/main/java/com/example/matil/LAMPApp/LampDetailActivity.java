@@ -28,7 +28,6 @@ public class LampDetailActivity extends AppCompatActivity {
             System.out.println("no photo id");
         }
 
-
         TextView tv = (TextView) this.findViewById( R.id.detail_lamp_name );
         tv.setText( lampName );
 

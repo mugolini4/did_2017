@@ -1,7 +1,9 @@
 package com.example.matil.LAMPApp;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,34 +17,36 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    RecyclerView rv;
+    LampManager lampManager = LampManager.getInstance();
+    RVAdapter adapter;
+    BroadcastReceiver updateReceiver;
+    IntentFilter intentFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
+
+        //intentFilter = new IntentFilter("action_name");
+
         setContentView( R.layout.activity_main );
 
-        final ArrayList<Lamp> lampList = LampManager.getInstance().getLamps();
-
-        /*ArrayList<String> names_list = new ArrayList<String>();
-        for (int i=0; i<lampList.size(); i++) {
-            names_list.add( lampList.get( i ).getLamp_name() );
-            //System.out.println(lampList.get( i ).getLamp_name());
-        }*/
-
-        RecyclerView rv = (RecyclerView)findViewById(R.id.recycler_view_lamp_list);
+        rv = (RecyclerView)findViewById(R.id.recycler_view_lamp_list);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
 
-        RVAdapter adapter = new RVAdapter(lampList);
+        adapter = new RVAdapter(lampManager.getLamps());
         rv.setAdapter(adapter);
 
-        /*ArrayAdapter<String> ad = new ArrayAdapter<String>(
-                this,
-                R.layout.list_item_lamp,
-                R.id.text_view_lamp,
-                names_list);
+        //ricerca lampade
+        lampManager.discover( new UDPListenerSerivce() );
 
-        ListView listView = (ListView) this.findViewById( R.id.list_view_lamp );
-        listView.setAdapter( ad );*/
+        /*updateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                rv.getAdapter().notifyDataSetChanged();
+            }
+        };*/
 
         Context context = this;
         int toast_duration = Toast.LENGTH_SHORT;
@@ -50,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         Toast toast = Toast.makeText( context, toast_text, toast_duration );
         toast.show();
         Log.d("!!!debug", "sono in main activity");
-        LampManager.getInstance().discover( new UDPListener() );
 
         ItemClickSupport.addTo(rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
@@ -61,12 +64,33 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT );
                 toast.show();
 
-                /*Intent detailIntent = new Intent( MainActivity.this, LampDetailActivity.class );
-                detailIntent.putExtra( "lamp_name", lampList.get( position ).getLamp_name() );
-                detailIntent.putExtra( "lamp_photo_ID", lampList.get( position ).getLamp_image() );
-                startActivity( detailIntent );*/
+                Intent detailIntent = new Intent( MainActivity.this, LampDetailActivity.class );
+                detailIntent.putExtra( "lamp_name", lampManager.getLamps().get( position ).getLamp_name() );
+                detailIntent.putExtra( "lamp_photo_ID", lampManager.getLamps().get( position ).getLamp_image() );
+                startActivity( detailIntent );
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        /*lampManager.discover( new UDPListenerSerivce() );
+        if(rv.getAdapter() != null && rv != null) {
+            rv.getAdapter().notifyDataSetChanged();
+        }
+
+        registerReceiver(updateReceiver, intentFilter);*/
+    }
+
+    @Override
+    protected void onPause() {
+        /*if(updateReceiver != null) {
+            unregisterReceiver(updateReceiver);
+            updateReceiver = null;
+        }*/
+
+        super.onPause();
     }
 }

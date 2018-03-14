@@ -13,12 +13,8 @@ public class Lamp {
     private boolean lamp_state; //true=ON; false=OFF
     private String lamp_URL;
 
-    public Lamp(String lampURL) {
+    public Lamp(String lampURL, String lampName, int lampImageID) {
         this.lamp_URL = lampURL;
-    }
-
-
-    public Lamp(String lampName, int lampImageID) {
         this.lamp_name = lampName;
         this.lamp_image_ID = lampImageID;
     }
@@ -27,10 +23,14 @@ public class Lamp {
         return lamp_name;
     }
 
-    public void setLamp_name(String newNAme) {
-        lamp_name = newNAme;
+    public void setLamp_name(String newName) {
+        lamp_name = newName;
     }
 
+    public String getLamp_ip() {
+        return lamp_URL;
+    }
+    
     public int getLamp_image() {
         return lamp_image_ID;
     }
