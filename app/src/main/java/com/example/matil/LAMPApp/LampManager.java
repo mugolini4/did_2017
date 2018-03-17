@@ -37,19 +37,17 @@ public class LampManager {
 
     public void addLamp(String lamp_ip, String lamp_name) {
         for (int i = 0; i < lampList.size(); i++) {
-            if(lampList.get( i ).getLamp_name().equals( lamp_ip )) {
+            if(lampList.get( i ).getLamp_ip().equals( lamp_ip )) {
                 return;
             }
         }
         lampList.add( new Lamp(lamp_ip, lamp_name,  R.drawable.cat_lamp) );
     }
 
-    public void discover(final UDPListenerSerivce done) {
+    public void discover(final UDPAsyncTask udpAsyncTask) {
         Log.d("!!!debug", "sono in discover");
 
-        //lampList.clear();
-
-        done.startListenForUDPBroadcast();
+        udpAsyncTask.execute();
     }
 
 }

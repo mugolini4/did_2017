@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.RunnableFuture;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +40,12 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(adapter);
 
         //ricerca lampade
-        lampManager.discover( new UDPListenerSerivce() );
+        lampManager.discover( new UDPAsyncTask( new Runnable() {
+            @Override
+            public void run() {
+                (rv.getAdapter()).notifyDataSetChanged();
+            }
+        }));
 
         /*updateReceiver = new BroadcastReceiver() {
             @Override
