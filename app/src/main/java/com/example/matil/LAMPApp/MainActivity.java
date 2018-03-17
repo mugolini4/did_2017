@@ -64,13 +64,13 @@ public class MainActivity extends AppCompatActivity {
         ItemClickSupport.addTo(rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                // useless shit
                 Context context = MainActivity.this;
-                String text = "ciao " + position;
-                Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT );
-                toast.show();
+                //String text = "ciao " + position;
+                //Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT );
+                //toast.show();
 
                 Intent detailIntent = new Intent( MainActivity.this, LampDetailActivity.class );
+                detailIntent.putExtra( "lamp_ip", lampManager.getLamps().get( position ).getLamp_ip() );
                 detailIntent.putExtra( "lamp_name", lampManager.getLamps().get( position ).getLamp_name() );
                 detailIntent.putExtra( "lamp_photo_ID", lampManager.getLamps().get( position ).getLamp_image() );
                 startActivity( detailIntent );
