@@ -16,6 +16,8 @@ import java.net.SocketTimeoutException;
 public class UDPAsyncTask extends AsyncTask<Object, String, Integer> {
 
     private Runnable updateUI;
+    private boolean keepListening;
+    private final int udpPort = 4096;
 
     public UDPAsyncTask(Runnable updateUI) {
         this.updateUI = updateUI;
@@ -30,14 +32,15 @@ public class UDPAsyncTask extends AsyncTask<Object, String, Integer> {
     protected Integer doInBackground(Object... nothing) {
         Log.d("doInBackground_udp", "started");
 
-        boolean keepListening = true;
+        keepListening = true;
+
         DatagramSocket socket = null;
         byte[] recvBuf = new byte[64000];
         DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
 
         try {
             if (socket == null || socket.isClosed()) {
-                socket = new DatagramSocket(4096);
+                socket = new DatagramSocket(udpPort);
             }
             socket.setSoTimeout(5000);
         } catch (SocketException e) {
@@ -71,5 +74,9 @@ public class UDPAsyncTask extends AsyncTask<Object, String, Integer> {
         }
 
         return 0;
+    }
+
+    public void stopListening() {
+        keepListening = false;
     }
 }

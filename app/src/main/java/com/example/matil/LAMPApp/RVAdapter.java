@@ -5,8 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.util.List;
@@ -31,9 +32,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.LampViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(LampViewHolder holder, int position) {
-        holder.lampName.setText(lamps.get(position).getLamp_name());
-        holder.lampPhoto.setImageResource(lamps.get(position).getLamp_image());
+    public void onBindViewHolder(final LampViewHolder holder, final int position) {
+        holder.lampName.setText(lamps.get(position).getLampName());
+        holder.lampPhoto.setImageResource(lamps.get(position).getLampImage());
+        holder.lampSwitch.setChecked( lamps.get( position ).isOn() );
+
+        holder.lampSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                lamps.get(position).setState(holder.lampSwitch.isChecked());
+            }
+        });
     }
 
     @Override
@@ -50,14 +59,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.LampViewHolder> {
         CardView cv;
         TextView lampName;
         ImageView lampPhoto;
+        Switch lampSwitch;
 
         LampViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.lamp_card_view);
-            lampName = (TextView)itemView.findViewById(R.id.lamp_name);
-            lampPhoto = (ImageView)itemView.findViewById(R.id.lamp_photo);
+            cv = itemView.findViewById(R.id.lamp_card_view);
+            lampName = itemView.findViewById(R.id.lamp_name);
+            lampPhoto = itemView.findViewById(R.id.lamp_photo);
+            lampSwitch = itemView.findViewById(R.id.lamp_switch);
+
         }
-
     }
-
 }

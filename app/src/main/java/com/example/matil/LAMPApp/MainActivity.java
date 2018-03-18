@@ -1,9 +1,7 @@
 package com.example.matil.LAMPApp;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,17 +10,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.RunnableFuture;
-
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView rv;
     LampManager lampManager = LampManager.getInstance();
     RVAdapter adapter;
-    BroadcastReceiver updateReceiver;
-    IntentFilter intentFilter;
+    //BroadcastReceiver updateReceiver;
+    //IntentFilter intentFilter;
+
+    //Asnyc Task per il metodo discover del LampManager
+    UDPAsyncTask udpAsyncTask = new UDPAsyncTask( new Runnable() {
+        @Override
+        public void run() {
+            (rv.getAdapter()).notifyDataSetChanged();
+        }
+    });
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +43,9 @@ public class MainActivity extends AppCompatActivity {
         rv.setAdapter(adapter);
 
         //ricerca lampade
-        lampManager.discover( new UDPAsyncTask( new Runnable() {
-            @Override
-            public void run() {
-                (rv.getAdapter()).notifyDataSetChanged();
-            }
-        }));
+        lampManager.discover(udpAsyncTask);
 
+        //roba vecchia col service
         /*updateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -64,15 +63,14 @@ public class MainActivity extends AppCompatActivity {
         ItemClickSupport.addTo(rv).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
             @Override
             public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                Context context = MainActivity.this;
                 //String text = "ciao " + position;
                 //Toast toast = Toast.makeText( context, text, Toast.LENGTH_SHORT );
                 //toast.show();
 
                 Intent detailIntent = new Intent( MainActivity.this, LampDetailActivity.class );
-                detailIntent.putExtra( "lamp_ip", lampManager.getLamps().get( position ).getLamp_ip() );
-                detailIntent.putExtra( "lamp_name", lampManager.getLamps().get( position ).getLamp_name() );
-                detailIntent.putExtra( "lamp_photo_ID", lampManager.getLamps().get( position ).getLamp_image() );
+                detailIntent.putExtra( "lamp_ip", lampManager.getLamps().get( position ).getLampIP() );
+                //detailIntent.putExtra( "lamp_name", lampManager.getLamps().get( position ).getLampName() );
+                detailIntent.putExtra( "lamp_photo_ID", lampManager.getLamps().get( position ).getLampImage() );
                 startActivity( detailIntent );
             }
         });
@@ -81,7 +79,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        rv.getAdapter().notifyDataSetChanged();
         super.onResume();
+
+        //roba vecchia col service
         /*lampManager.discover( new UDPListenerSerivce() );
         if(rv.getAdapter() != null && rv != null) {
             rv.getAdapter().notifyDataSetChanged();
@@ -98,5 +99,11 @@ public class MainActivity extends AppCompatActivity {
         }*/
 
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        udpAsyncTask.stopListening();
+        super.onDestroy();
     }
 }
